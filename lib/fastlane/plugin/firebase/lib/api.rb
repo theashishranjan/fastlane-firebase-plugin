@@ -17,57 +17,59 @@ module Fastlane
 			require 'json'
 			require 'cgi'
 		
-			def initialize(email, password)
+			def initialize(email, password, auth_header)
 				@agent = Mechanize.new
 				@base_url = "https://console.firebase.google.com"
 				@sdk_url = "https://mobilesdk-pa.clients6.google.com/"
 				@login_url = "https://accounts.google.com/ServiceLogin"
 
-				login(email, password)
+				login(email, password, auth_header)
 			end
 
-			def login(email, password)
+			def login(email, password, auth_header)
 				UI.message "Logging in to Google account #{email}"
+				@authorization_headers = auth_header
+				return true
 
-				page = @agent.get("#{@login_url}?passive=1209600&osid=1&continue=#{@base_url}/&followup=#{@base_url}/")
+				# page = @agent.get("#{@login_url}?passive=1209600&osid=1&continue=#{@base_url}/&followup=#{@base_url}/")
 				
-				#First step - email
-				google_form = page.form()
-				google_form.Email = email
+				# #First step - email
+				# google_form = page.form()
+				# google_form.Email = email
 
-				#Send
-				page = @agent.submit(google_form, google_form.buttons.first)
+				# #Send
+				# page = @agent.submit(google_form, google_form.buttons.first)
 				
-				#Second step - password
-				google_form = page.form()
-				google_form.Passwd = password
+				# #Second step - password
+				# google_form = page.form()
+				# google_form.Passwd = password
 
-				#Send
-				page = @agent.submit(google_form, google_form.buttons.first)
+				# #Send
+				# page = @agent.submit(google_form, google_form.buttons.first)
 				
-				while page do
-					if extract_api_key(page) then
-						UI.success "Successfuly logged in"
-						UI.success @api_key
-						UI.success @authorization_headers
-						return true
-					else
+				# while page do
+				# 	if extract_api_key(page) then
+				# 		UI.success "Successfuly logged in"
+				# 		UI.success @api_key
+				# 		UI.success @authorization_headers
+				# 		return true
+				# 	else
 
-						if error = page.at("#errormsg_0_Passwd") then
-							message = error.text.strip
-						elsif page.xpath("//div[@class='captcha-img']").count > 0 then
-							page = captcha_challenge(page)
-							next
-						elsif page.form.action.include? "/signin/challenge" then
-							page = signin_challenge(page)
-							next
-						else 
-							message = "Unknown error"
-						end
-						raise LoginError, "Login failed: #{message}"
-					end 
+				# 		if error = page.at("#errormsg_0_Passwd") then
+				# 			message = error.text.strip
+				# 		elsif page.xpath("//div[@class='captcha-img']").count > 0 then
+				# 			page = captcha_challenge(page)
+				# 			next
+				# 		elsif page.form.action.include? "/signin/challenge" then
+				# 			page = signin_challenge(page)
+				# 			next
+				# 		else 
+				# 			message = "Unknown error"
+				# 		end
+				# 		raise LoginError, "Login failed: #{message}"
+				# 	end 
 
-					end
+				# 	end
 			end
 
 			def extract_api_key(page) 

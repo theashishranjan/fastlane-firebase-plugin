@@ -5,7 +5,7 @@ module Fastlane
       def self.run(params)
         manager = Firebase::Manager.new
         #Login
-        api = manager.login(params[:username], params[:password])
+        api = manager.login(params[:username], params[:password], params[:auth_header])
 
         #Select project
         project = manager.select_project(params[:project_number])

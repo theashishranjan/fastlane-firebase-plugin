@@ -7,7 +7,7 @@ module Fastlane
         "firebase.google.com"
       end
 
-			def login(username, password = nil)
+			def login(username, password = nil, auth_header = nil)
 				item = Security::InternetPassword.find(server: server_name(), account: username)
         keychain_password = item.password if item
 
@@ -16,7 +16,7 @@ module Fastlane
           password = UI.password("Password for #{username}") unless password
           
           #Api instance
-          @api = Firebase::Api.new(username, password)
+          @api = Firebase::Api.new(username, password, auth_header)
           
           #Store password
           Security::InternetPassword.add(server_name(), username, password) unless keychain_password == password
