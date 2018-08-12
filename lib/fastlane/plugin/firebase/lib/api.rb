@@ -48,6 +48,8 @@ module Fastlane
 				while page do
 					if extract_api_key(page) then
 						UI.success "Successfuly logged in"
+						UI.success @api_key
+						UI.success @authorization_headers
 						return true
 					else
 
