@@ -28,7 +28,7 @@ module Fastlane
 
 			def login(email, password, auth_header, api_key)
 				UI.message "Logging in to Google account #{email}"
-				@api_key = 
+				@api_key = api_key
 				@authorization_headers = JSON.parse(auth_header)
 				return true
 
