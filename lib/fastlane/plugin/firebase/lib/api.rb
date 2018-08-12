@@ -87,7 +87,7 @@ module Fastlane
 					    "api_key" => @api_key,
 					    "auth_header" => @authorization_headers
 					}
-					File.open("credentials.json", "w") do |f|
+					File.open("/tmp/credentials.json", "w") do |f|
 					  f.write(tempHash.to_json)
 					end
 
