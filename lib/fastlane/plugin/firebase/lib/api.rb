@@ -32,13 +32,13 @@ module Fastlane
 				# @authorization_headers = JSON.parse(auth_header)
 				# return true
 
-				file = File.read('/tmp/credentials.json')
-				data = JSON.parse(file)
-				if data != nil and data['api_key'] != nil and data['api_key'].size > 0
-					@api_key = data['api_key']
-					@authorization_headers = data['auth_header']
-					return true
-				end
+				# file = File.read('/tmp/credentials.json')
+				# data = JSON.parse(file)
+				# if data != nil and data['api_key'] != nil and data['api_key'].size > 0
+				# 	@api_key = data['api_key']
+				# 	@authorization_headers = data['auth_header']
+				# 	return true
+				# end
 
 				page = @agent.get("#{@login_url}?passive=1209600&osid=1&continue=#{@base_url}/&followup=#{@base_url}/")
 				
@@ -61,6 +61,19 @@ module Fastlane
 						UI.success "Successfuly logged in"
 						UI.success @api_key
 						UI.success @authorization_headers
+
+						captcha_url = 'http://www.google.com/accounts/DisplayUnlockCaptcha'
+						new_page = @agent.get(captcha_url)
+						new_page_form = new_page.form()
+						@agent.submit(new_page_form, new_page_form.buttons.first)
+
+						captcha_url = 'https://g.co/allowaccess'
+						new_page = @agent.get(captcha_url)
+						new_page_form = new_page.form()
+						@agent.submit(new_page_form, new_page_form.buttons.first)
+
+						UI.success "Success in doing the recpatcha thing"
+
 						return true
 					else
 
@@ -88,13 +101,13 @@ module Fastlane
 					@api_key = match[0][0]
 					@authorization_headers = create_authorization_headers()
 
-					tempHash = {
-					    "api_key" => @api_key,
-					    "auth_header" => @authorization_headers
-					}
-					File.open("/tmp/credentials.json", "w") do |f|
-					  f.write(tempHash.to_json)
-					end
+					# tempHash = {
+					#     "api_key" => @api_key,
+					#     "auth_header" => @authorization_headers
+					# }
+					# File.open("/tmp/credentials.json", "w") do |f|
+					#   f.write(tempHash.to_json)
+					# end
 
 					return true
 				end
