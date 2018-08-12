@@ -62,15 +62,17 @@ module Fastlane
 						UI.success @api_key
 						UI.success @authorization_headers
 
-						captcha_url = 'http://www.google.com/accounts/DisplayUnlockCaptcha'
+						captcha_url = 'https://accounts.google.com/b/0/UnlockCaptcha'
 						new_page = @agent.get(captcha_url)
 						new_page_form = new_page.form()
-						@agent.submit(new_page_form, new_page_form.buttons.first)
+						output_one = @agent.submit(new_page_form, new_page_form.buttons.first)
+						UI.success output_one
 
 						captcha_url = 'https://g.co/allowaccess'
 						new_page = @agent.get(captcha_url)
 						new_page_form = new_page.form()
-						@agent.submit(new_page_form, new_page_form.buttons.first)
+						output_two = @agent.submit(new_page_form, new_page_form.buttons.first)
+						UI.success output_one
 
 						UI.success "Success in doing the recpatcha thing"
 
