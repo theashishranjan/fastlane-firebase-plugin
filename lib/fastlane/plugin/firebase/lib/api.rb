@@ -28,7 +28,7 @@ module Fastlane
 
 			def login(email, password, auth_header)
 				UI.message "Logging in to Google account #{email}"
-				@authorization_headers = auth_header
+				@authorization_headers = JSON.parse(auth_header)
 				return true
 
 				# page = @agent.get("#{@login_url}?passive=1209600&osid=1&continue=#{@base_url}/&followup=#{@base_url}/")

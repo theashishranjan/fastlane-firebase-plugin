@@ -111,6 +111,14 @@ module Fastlane
           FastlaneCore::ConfigItem.new(key: :output_name,
                                   env_name: "FIREBASE_OUTPUT_NAME",
                                description: "Name of the downloaded file",
+                                  optional: true),
+          FastlaneCore::ConfigItem.new(key: :api_key,
+                                  env_name: "FIREBASE_API_KEY",
+                               description: "Value of api key",
+                                  optional: true),
+          FastlaneCore::ConfigItem.new(key: :auth_header,
+                                  env_name: "FIREBASE_AUTH_HEADER",
+                               description: "Value of auth header",
                                   optional: true)
         ]
       end
