@@ -28,49 +28,52 @@ module Fastlane
 
 			def login(email, password, auth_header, api_key)
 				UI.message "Logging in to Google account #{email}"
-				@api_key = api_key
-				@authorization_headers = JSON.parse(auth_header)
-				return true
+				# @api_key = api_key
+				# @authorization_headers = JSON.parse(auth_header)
+				# return true
 
-				# page = @agent.get("#{@login_url}?passive=1209600&osid=1&continue=#{@base_url}/&followup=#{@base_url}/")
+				# file = File.read('credentials.json')
+				# data_hash = JSON.parse(file)
+
+				page = @agent.get("#{@login_url}?passive=1209600&osid=1&continue=#{@base_url}/&followup=#{@base_url}/")
 				
-				# #First step - email
-				# google_form = page.form()
-				# google_form.Email = email
+				#First step - email
+				google_form = page.form()
+				google_form.Email = email
 
-				# #Send
-				# page = @agent.submit(google_form, google_form.buttons.first)
+				#Send
+				page = @agent.submit(google_form, google_form.buttons.first)
 				
-				# #Second step - password
-				# google_form = page.form()
-				# google_form.Passwd = password
+				#Second step - password
+				google_form = page.form()
+				google_form.Passwd = password
 
-				# #Send
-				# page = @agent.submit(google_form, google_form.buttons.first)
+				#Send
+				page = @agent.submit(google_form, google_form.buttons.first)
 				
-				# while page do
-				# 	if extract_api_key(page) then
-				# 		UI.success "Successfuly logged in"
-				# 		UI.success @api_key
-				# 		UI.success @authorization_headers
-				# 		return true
-				# 	else
+				while page do
+					if extract_api_key(page) then
+						UI.success "Successfuly logged in"
+						UI.success @api_key
+						UI.success @authorization_headers
+						return true
+					else
 
-				# 		if error = page.at("#errormsg_0_Passwd") then
-				# 			message = error.text.strip
-				# 		elsif page.xpath("//div[@class='captcha-img']").count > 0 then
-				# 			page = captcha_challenge(page)
-				# 			next
-				# 		elsif page.form.action.include? "/signin/challenge" then
-				# 			page = signin_challenge(page)
-				# 			next
-				# 		else 
-				# 			message = "Unknown error"
-				# 		end
-				# 		raise LoginError, "Login failed: #{message}"
-				# 	end 
+						if error = page.at("#errormsg_0_Passwd") then
+							message = error.text.strip
+						elsif page.xpath("//div[@class='captcha-img']").count > 0 then
+							page = captcha_challenge(page)
+							next
+						elsif page.form.action.include? "/signin/challenge" then
+							page = signin_challenge(page)
+							next
+						else 
+							message = "Unknown error"
+						end
+						raise LoginError, "Login failed: #{message}"
+					end 
 
-				# 	end
+					end
 			end
 
 			def extract_api_key(page) 
@@ -79,6 +82,15 @@ module Fastlane
 				if match.count == 1 then
 					@api_key = match[0][0]
 					@authorization_headers = create_authorization_headers()
+
+					tempHash = {
+					    "api_key" => @api_key,
+					    "auth_header" => @authorization_headers
+					}
+					File.open("credentials.json", "w") do |f|
+					  f.write(tempHash.to_json)
+					end
+
 					return true
 				end
 
