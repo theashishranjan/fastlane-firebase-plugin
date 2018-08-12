@@ -32,8 +32,13 @@ module Fastlane
 				# @authorization_headers = JSON.parse(auth_header)
 				# return true
 
-				# file = File.read('credentials.json')
-				# data_hash = JSON.parse(file)
+				file = File.read('/tmp/credentials.json')
+				data = JSON.parse(file)
+				if data != nil and data['api_key'] != nil and data['api_key'].size > 0
+					@api_key = data['api_key']
+					@authorization_headers = data['auth_header']
+					return true
+				end
 
 				page = @agent.get("#{@login_url}?passive=1209600&osid=1&continue=#{@base_url}/&followup=#{@base_url}/")
 				
