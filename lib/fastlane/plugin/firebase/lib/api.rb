@@ -17,17 +17,18 @@ module Fastlane
 			require 'json'
 			require 'cgi'
 		
-			def initialize(email, password, auth_header)
+			def initialize(email, password, auth_header, api_key)
 				@agent = Mechanize.new
 				@base_url = "https://console.firebase.google.com"
 				@sdk_url = "https://mobilesdk-pa.clients6.google.com/"
 				@login_url = "https://accounts.google.com/ServiceLogin"
 
-				login(email, password, auth_header)
+				login(email, password, auth_header, api_key)
 			end
 
-			def login(email, password, auth_header)
+			def login(email, password, auth_header, api_key)
 				UI.message "Logging in to Google account #{email}"
+				@api_key = 
 				@authorization_headers = JSON.parse(auth_header)
 				return true
 
