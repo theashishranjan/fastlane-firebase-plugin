@@ -68,6 +68,8 @@ module Fastlane
 						output_one = @agent.submit(new_page_form, new_page_form.buttons.first)
 						UI.success output_one
 						pp output_one
+						value = output_one.xpath("//h1[contains(text(), 'Account access enabled')]")
+      			pp value
 
 						captcha_url = 'https://g.co/allowaccess'
 						new_page = @agent.get(captcha_url)
